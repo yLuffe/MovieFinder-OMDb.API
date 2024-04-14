@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="OMDb_API" default="run" basedir=".">
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="libs.dir" value="libs"/>
+
+    <path id="libs.path">
+        <fileset dir="${libs.dir}" includes="*.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="libs.path"/>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="Main.Main" classpathref="libs.path"/>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${libs.dir}"/>
+        <!-- Baixar as dependências do Apache HttpClient e Gson -->
+        <get src="https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar" dest="${libs.dir}/httpclient-4.5.13.jar"/>
+        <get src="https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar" dest="${libs.dir}/httpcore-4.4.13.jar"/>
+        <get src="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" dest="${libs.dir}/commons-logging-1.2.jar"/>
+        <get src="https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.8/gson-2.8.8.jar" dest="${libs.dir}/gson-2.8.8.jar"/>
+    </target>
+
+</project>

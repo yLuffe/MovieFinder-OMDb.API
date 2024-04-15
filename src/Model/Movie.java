@@ -22,6 +22,12 @@ public class Movie {
     // Constructors
     public Movie() {
     }
+    
+    public Movie(String title, String year, String imdbID){
+        this.title = title;
+        this.year = year;
+        this.imdbID = imdbID;
+    }
 
     public Movie(String title, String year, String genre, String director, String writer,
             String[] actors, String plot, String language, String country, String posterLink,

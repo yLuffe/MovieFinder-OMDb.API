@@ -2,29 +2,30 @@ package View;
 
 import Controller.ApiController;
 import Model.Movie;
-import com.sun.source.tree.TryTree;
-import java.awt.Image;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class MainScreen extends javax.swing.JFrame {
 
-    ApiController api = ApiController.getInstance();
+    // Chama ApiController
+    ApiController api = new ApiController();
 
-    Movie selectedMovie = new Movie();
+    // Objeto Filme Selecionado
+    private Movie selectedMovie = new Movie();
     
     public MainScreen() {
-        initComponents();
-
+        initComponents();  
     }
 
+    /*          -=Meus Métodos=-          */
+    // Pegar filme selecionado
+    public Movie getSelectedMovie() {
+        return selectedMovie;
+    }
+
+    //
     private DefaultTableModel getTableModel() {
         try {
             DefaultTableModel model = (DefaultTableModel) jTableMovies.getModel();
@@ -92,7 +93,7 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         textMovieName = new javax.swing.JTextField();
         btnSearchMovie = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnTest = new javax.swing.JButton();
         jLayeredPane2 = new javax.swing.JLayeredPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableMovies = new javax.swing.JTable();
@@ -119,17 +120,17 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnTest.setText("Test");
+        btnTest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnTestActionPerformed(evt);
             }
         });
 
         jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(textMovieName, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(btnSearchMovie, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(btnTest, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -147,7 +148,7 @@ public class MainScreen extends javax.swing.JFrame {
                         .addGap(15, 15, 15))
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addGap(113, 113, 113)
-                        .addComponent(jButton1)
+                        .addComponent(btnTest)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jLayeredPane1Layout.setVerticalGroup(
@@ -155,7 +156,7 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(btnTest)
                     .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(btnSearchMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(textMovieName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -252,27 +253,24 @@ public class MainScreen extends javax.swing.JFrame {
 
     // Mouse Double Click Table
     private void jTableMoviesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMoviesMouseClicked
-        if (evt.getClickCount() == 2) {
-            try {
-                String imdbId = null;
-                DefaultTableModel model = getTableModel();
+        try {
+            if (evt.getClickCount() == 2) {
+                DefaultTableModel model = (DefaultTableModel) jTableMovies.getModel();
                 int selectedRow = jTableMovies.getSelectedRow();
-
                 if (selectedRow >= 0) {
-                    imdbId = model.getValueAt(selectedRow, 2).toString();
+                    String imdbId = model.getValueAt(selectedRow, 2).toString().trim();
+                    selectedMovie = new ApiController().searchMovieById(imdbId);
                 }
-                
-                //selectedMovie = api.searchMovie(imdbId);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                new MovieScreen().setVisible(true);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_jTableMoviesMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new MovieScreen().setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestActionPerformed
+
+    }//GEN-LAST:event_btnTestActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -308,7 +306,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearchMovie;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnTest;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;

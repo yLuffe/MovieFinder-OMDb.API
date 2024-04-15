@@ -12,13 +12,40 @@ public class ApiController {
 
     OmdbApiConnector api = new OmdbApiConnector();
     Gson gson = new Gson();
+    String jsonString ="";
 
     // ArrayList com os filmes encontrados
     private ArrayList<Movie> listMovie = new ArrayList<>();
 
+    public Movie searchMovieById(String id) {
+        try {
+            jsonString = api.search(null, id, 2);
+            JsonObject jsonObject = gson.fromJson(jsonString, JsonObject.class);
+
+            String title = jsonObject.has("Title") ? jsonObject.get("Title").getAsString() : "";
+            String year = jsonObject.has("Year") ? jsonObject.get("Year").getAsString() : "";
+            String imdbID = jsonObject.has("imdbID") ? jsonObject.get("imdbID").getAsString() : "";
+            String genre = jsonObject.has("Genre") ? jsonObject.get("Genre").getAsString() : "";
+            String director = jsonObject.has("Director") ? jsonObject.get("Director").getAsString() : "";
+            String writer = jsonObject.has("Writer") ? jsonObject.get("Writer").getAsString() : "";
+            String plot = jsonObject.has("Plot") ? jsonObject.get("Plot").getAsString() : "";
+            String language = jsonObject.has("Language") ? jsonObject.get("Language").getAsString() : "";
+            String country = jsonObject.has("Country") ? jsonObject.get("Country").getAsString() : "";
+            String posterLink = jsonObject.has("Poster") ? jsonObject.get("Poster").getAsString() : "";
+            String type = jsonObject.has("Type") ? jsonObject.get("Type").getAsString() : "";
+            String runtime = jsonObject.has("Runtime") ? jsonObject.get("Runtime").getAsString() : "";
+
+            return new Movie(title, year, genre, director, writer, null, plot, language, country, posterLink, imdbID, type, language, runtime);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ArrayList<Movie> searchMovie(String movieName) {
         try {
-            String jsonString = api.search(movieName.replaceAll(" ", "+").trim(), "null", 1);
+            jsonString = api.search(movieName.replaceAll(" ", "+").trim(), "null", 1);
 
             JsonObject jsonObject = gson.fromJson(jsonString, JsonObject.class);
             JsonArray searchResults = jsonObject.getAsJsonArray("Search");
@@ -28,35 +55,13 @@ public class ApiController {
                 String title = movieJson.get("Title").getAsString();
                 String year = movieJson.get("Year").getAsString();
                 String imdbID = movieJson.get("imdbID").getAsString();
-                //String genre = movieJson.get("Genre").getAsString();
-                //String director = movieJson.get("Director").getAsString();
-                //String writer = movieJson.get("Writer").getAsString();
-                //String plot = movieJson.get("Plot").getAsString();
-                //String language = movieJson.get("Language").getAsString();
-                //String country = movieJson.get("Country").getAsString();
-                //String posterLink = movieJson.get("Poster").getAsString();
-                //String type = movieJson.get("Type").getAsString();
-                //String runtime = movieJson.get("Runtime").getAsString();
-
-                Movie movie = new Movie(title, "", "", "", "", null, "", "", "", "", imdbID, "", "", "");
+                Movie movie = new Movie(title, year, imdbID);
                 listMovie.add(movie);
             }
-
             return listMovie;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
-    }
-
-    // Singleton
-    private static ApiController instance;
-
-    public synchronized static ApiController getInstance() {
-        if (instance == null) {
-            instance = new ApiController();
-        }
-        return instance;
     }
 }

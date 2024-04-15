@@ -1,11 +1,26 @@
 package View;
 
+import Model.Movie;
+import View.MainScreen;
+
 public class MovieScreen extends javax.swing.JFrame {
 
     public MovieScreen() {
         initComponents();
+        loadMovie();
     }
 
+    private Movie movie = new MainScreen().getSelectedMovie();
+    
+    private void loadMovie(){
+        try {
+            labelMovieTitle.setText(movie.getTitle());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
